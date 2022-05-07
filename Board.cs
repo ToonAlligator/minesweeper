@@ -5,7 +5,7 @@ public class Board
     public int rows { get; set; }
     public int cols { get; set; }
     public int minesAmount { get; set; }
-    public string[,] cells { get; set; }
+    public List<Cell> cells { get; set; }
     public List<(int,int)> mines { get; set; }
 
     public Board()
@@ -13,12 +13,12 @@ public class Board
         rows = 9;
         cols = 9;
         minesAmount = 10;
-        cells = new string[rows,cols];
-        for (int i =0; i < rows; i++)
+        cells = new();
+        for (int i = 0; i < rows; i++)
         {
-            for (int j=0; j< cols; j++)
+            for (int j = 0; j < cols; j++)
             {
-                cells[i,j] = "[ ]";
+                cells.Add(new Cell(i,j));
             }
         }
         mines = new();
@@ -29,7 +29,7 @@ public class Board
         {
             for (int j=0; j< cols; j++)
             {
-                Console.Write($"\t {cells[i,j]}");
+                Console.Write($"\t [{cells.Where(x => x.coordX == i && x.coordY == j).First().value}]");
             }
             Console.WriteLine();
         }    
@@ -49,7 +49,8 @@ public class Board
         }
         foreach ((int,int) mine in mines)
         {
-            cells[mine.Item1, mine.Item2] = "[*]";
+            var cell = cells.Where(c => c.coordX == mine.Item1 && c.coordY == mine.Item2).First();
+            cell.value = "*";
         }
     }
     public (int,int) getRandomCoords()
