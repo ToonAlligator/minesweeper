@@ -61,4 +61,27 @@ public class Board
 
         return (xMine, yMine);
     }
+    public void revealCell(int x, int y)
+    {
+        if (x < rows && y < cols)
+        {
+            var cell = cells.Where(c => c.coordX == x && c.coordY == y).First();
+            int adjacentMinesCount = 0;
+            for (int i = x-1; i <= x + 1; i++)
+            {
+                for (int j = y-1; j <= y + 1; j++)
+                {
+                    if (i >= 0 && j >= 0 && i < rows && j < cols)
+                    {
+                        if (mines.Contains((i,j)))
+                        {
+                            adjacentMinesCount++;
+                        }
+                    }
+                }
+            }
+            cell.value = adjacentMinesCount.ToString();
+            cell.state = cellState.Revealed;
+        }
+    }
 }
