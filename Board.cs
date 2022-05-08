@@ -7,9 +7,11 @@ public class Board
     public int minesAmount { get; set; }
     public List<Cell> cells { get; set; }
     public List<(int,int)> mines { get; set; }
+    public gameState state { get; set; }
 
     public Board()
     {
+        state = gameState.Active;
         rows = 9;
         cols = 9;
         minesAmount = 10;
@@ -63,6 +65,11 @@ public class Board
     }
     public void revealCell(int x, int y)
     {
+        if (mines.Contains((x,y)))
+        {
+            state = gameState.Lose;
+            return;
+        }
         if (x < rows && y < cols)
         {
             var cell = cells.Where(c => c.coordX == x && c.coordY == y).First();
@@ -82,6 +89,14 @@ public class Board
             }
             cell.value = adjacentMinesCount.ToString();
             cell.state = cellState.Revealed;
+            checkVictory();
+        }
+    }
+    public void checkVictory()
+    {
+        if (cells.Where(c => c.value == " ").FirstOrDefault() == null)
+        {
+            state = gameState.Win;
         }
     }
 }
