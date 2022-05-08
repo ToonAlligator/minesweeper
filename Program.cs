@@ -2,6 +2,7 @@
 Console.WriteLine("Minesweeper!");
 Board board = new();
 board.setMines();
+board.RevealMines(false);
 board.Print();
 
 while (board.state == gameState.Active)

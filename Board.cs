@@ -49,11 +49,7 @@ public class Board
             while (mines.Contains(newMine));
             mines.Add(newMine);
         }
-        foreach ((int,int) mine in mines)
-        {
-            var cell = cells.Where(c => c.coordX == mine.Item1 && c.coordY == mine.Item2).First();
-            cell.value = "*";
-        }
+        
     }
     public (int,int) getRandomCoords()
     {
@@ -65,14 +61,15 @@ public class Board
     }
     public void revealCell(int x, int y)
     {
+        var cell = cells.Where(c => c.coordX == x && c.coordY == y).First();
         if (mines.Contains((x,y)))
         {
+            cell.value = "*";
             state = gameState.Lose;
             return;
         }
         if (x < rows && y < cols)
         {
-            var cell = cells.Where(c => c.coordX == x && c.coordY == y).First();
             int adjacentMinesCount = 0;
             for (int i = x-1; i <= x + 1; i++)
             {
@@ -97,6 +94,18 @@ public class Board
         if (cells.Where(c => c.value == " ").FirstOrDefault() == null)
         {
             state = gameState.Win;
+        }
+    }
+
+    public void RevealMines(bool show)
+    {
+        if (show)
+        {
+            foreach ((int,int) mine in mines)
+            {
+                var cell = cells.Where(c => c.coordX == mine.Item1 && c.coordY == mine.Item2).First();
+                cell.value = "*";
+            }
         }
     }
 }
